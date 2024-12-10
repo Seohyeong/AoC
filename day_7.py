@@ -1,41 +1,35 @@
-from collections import deque
-import copy
-
-input = dict()
+inputs = []
 with open('day_7_input.txt') as file:
     for line in file:
         result, elements = line.strip().split(':')
-        elements = [int(e) for e in elements.strip().split(' ')]
-        input[int(result)] = elements
-        
+        inputs.append([int(result)] + [int(e) for e in elements.strip().split(' ')])
     
-def is_result_possible(result, queue, cal_so_far):
+    
+def is_result_possible(result, elements, idx, cal_so_far):
     if cal_so_far > result:
         return False
-    if not queue:
+    if idx >= len(elements):
         print("cal_so_far: ", cal_so_far)
         if cal_so_far == result:
             return True
         else:
             return False
     
-    num = queue.popleft()
+    num = elements[idx]
+    idx += 1
     
-    print("cal_so_far: {}, num: {}, queue: {}".format(cal_so_far, num, queue))
+    print("result: {}, cal_so_far: {}, num: {}, idx: {}".format(result, cal_so_far, num, idx))
     
-    return (is_result_possible(result, copy.deepcopy(queue), cal_so_far * num) or 
-            is_result_possible(result, copy.deepcopy(queue), cal_so_far + num))
+    return (is_result_possible(result, elements, idx, cal_so_far * num) or 
+            is_result_possible(result, elements, idx, cal_so_far + num))
     
-ans = 0
-sum_results = 0
-for result, elements in input.items():
-    print('\n')
-    print('result: {}, queue: {}'.format(result, elements))
-    queue = deque(elements)
-    cal_so_far = queue.popleft()
-    if is_result_possible(result, queue, cal_so_far):
-        print("POSSIBLE!")
-        ans += 1
-        sum_results += result
+count_possible, total_sum = 0, 0
+for input in inputs:
+    print('\ninput: {}'.format(input))
+    if is_result_possible(input[0], input[1:], 1, input[1]):
+        count_possible += 1
+        total_sum += input[0]
+        print('SUCCESS!')
 
-print(sum_results) # 4364915411238
+print(count_possible)
+print(total_sum) # 4364915411363
