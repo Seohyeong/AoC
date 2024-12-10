@@ -5,7 +5,7 @@ with open('day_7_input.txt') as file:
         inputs.append([int(result)] + [int(e) for e in elements.strip().split(' ')])
     
     
-def is_result_possible(result, elements, idx, cal_so_far):
+def is_result_possible(idx, cal_so_far, op={'+', '*', '||'}):
     if cal_so_far > result:
         return False
     if idx >= len(elements):
@@ -20,16 +20,25 @@ def is_result_possible(result, elements, idx, cal_so_far):
     
     print("result: {}, cal_so_far: {}, num: {}, idx: {}".format(result, cal_so_far, num, idx))
     
-    return (is_result_possible(result, elements, idx, cal_so_far * num) or 
-            is_result_possible(result, elements, idx, cal_so_far + num))
+    if '||' in op:
+        return (is_result_possible(idx, cal_so_far * num, op) or
+                is_result_possible(idx, cal_so_far + num, op) or
+                is_result_possible(idx, int(str(cal_so_far) + str(num)), op))
+    else:
+        return (is_result_possible(idx, cal_so_far * num, op) or
+                is_result_possible(idx, cal_so_far + num, op))
+    
     
 count_possible, total_sum = 0, 0
 for input in inputs:
     print('\ninput: {}'.format(input))
-    if is_result_possible(input[0], input[1:], 1, input[1]):
+    result, elements = input[0], input[1:]
+    idx = 1
+    cal_so_far = input[1]
+    if is_result_possible(idx, cal_so_far, op={'+', '*', '||'}):
         count_possible += 1
         total_sum += input[0]
         print('SUCCESS!')
 
 print(count_possible)
-print(total_sum) # 4364915411363
+print(total_sum) # 4364915411363, 38322057216320
