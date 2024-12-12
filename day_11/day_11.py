@@ -1,30 +1,31 @@
-from tqdm import tqdm
+from collections import defaultdict
 
+stone_to_cnt = defaultdict(int)
 with open('day_11/day_11_input.txt') as file:
     for line in file:
-        stones = [int(x) for x in line.strip().split(' ')]
+        for x in line.strip().split(' '):
+            stone_to_cnt[int(x)] += 1
 
 memo = {0: [1]}
-def blink(stones: list[int]) -> list[int]:  
-    next_stones = []
-    for idx, s in enumerate(stones):
-        if s in memo:
-            next_stones.extend(memo[s])
+def blink(stone_to_cnt: dict[int: int]) -> dict[int: int]:
+    next_stone_to_cnt = defaultdict(int)
+    for stone, cnt in stone_to_cnt.items():
+        if stone in memo:
+            for next_stone in memo[stone]:
+                next_stone_to_cnt[next_stone] += cnt
         else:
-            if len(str(s)) % 2 == 0:
-                len_stone = len(str(s))
-                first_half, second_half = str(s)[:len_stone//2], str(s)[len_stone//2:]
-                next_stones.append(int(first_half))
-                next_stones.append(int(second_half))
-                memo[s] = [int(first_half), int(second_half)]
+            if len(str(stone)) % 2 == 0:
+                len_stone = len(str(stone))
+                first_half, second_half = str(stone)[:len_stone//2], str(stone)[len_stone//2:]
+                next_stone_to_cnt[int(first_half)] += cnt
+                next_stone_to_cnt[int(second_half)] += cnt
+                memo[stone] = [int(first_half), int(second_half)]
             else:
-                next_stones.append(stones[idx] * 2024)
-                memo[s] = [stones[idx] * 2024]
-    return next_stones
+                next_stone_to_cnt[stone * 2024] += cnt
+                memo[stone] = [stone * 2024]
+    return next_stone_to_cnt
 
-num_blinks = 25
-print(stones)
-for i in tqdm(range(num_blinks), total = num_blinks):
-    stones = blink(stones)
-    # print(stones)
-print(len(stones)) # 182081
+num_blinks = 75
+for i in range(num_blinks):
+    stone_to_cnt = blink(stone_to_cnt)
+print(sum(stone_to_cnt.values())) # 182081, 216318908621637
