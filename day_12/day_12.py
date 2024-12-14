@@ -135,4 +135,4 @@ for areas in veggie_areas:
     print("{} AREA: {}, SIDES: {}, COST: {}".format(veggie, area, num_sides, area * num_sides))
 
         
-print("TOTAL COST: {}".format(cost)) # 953738: too low
+print("TOTAL COST: {}".format(cost)) # 953738
