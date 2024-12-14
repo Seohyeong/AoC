@@ -81,7 +81,7 @@ def get_num_sides(locs: set[tuple[int, int]]) -> int:
             up = (r - 1, c) in locs if (0 <= r - 1 < num_rows and 0 <= c < num_cols) else False
             yourself = (r, c) in locs if (0 <= r < num_rows and 0 <= c < num_cols) else False
             if up != yourself: # if either exists
-                # TODO: up and not yourself -> not up and yourself: need to be counted
+                # up and not yourself -> not up and yourself: need to be counted
                 if prev_up is not None and prev_up != up:
                     new_seg = True
                 if new_seg:
@@ -90,7 +90,6 @@ def get_num_sides(locs: set[tuple[int, int]]) -> int:
             else: # if inside the shape or there is a gap
                 new_seg = True
             prev_up = up
-            # prev_yourself = yourself
         total_lines += num_lines_per_row
     total_hrz_lines = total_lines
     print("total horizontal lines: {}".format(total_hrz_lines))
@@ -112,7 +111,6 @@ def get_num_sides(locs: set[tuple[int, int]]) -> int:
             else: # if inside the shape or there is a gap
                 new_seg = True
             prev_left = left
-            # prev_yourself = yourself
         total_lines += num_lines_per_row
     total_vtc_lines = total_lines - total_hrz_lines
     print("total vertical lines: {}".format(total_vtc_lines))
@@ -137,4 +135,4 @@ for areas in veggie_areas:
     print("{} AREA: {}, SIDES: {}, COST: {}".format(veggie, area, num_sides, area * num_sides))
 
         
-print("TOTAL COST: {}".format(cost)) # 948688: too low
+print("TOTAL COST: {}".format(cost)) # 953738: too low
