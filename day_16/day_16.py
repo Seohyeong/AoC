@@ -2,13 +2,12 @@ import sys
 from pathlib import Path
 sys.path.append(str(Path(__file__).resolve().parent.parent))
 
-from collections import deque
 import heapq
 
 from rsc.rsc import Reader, Matrix
 from rsc.rsc import prettyprint
 
-input_reader = Reader('day_16/day_16_input.txt')
+input_reader = Reader('day_16/day_16_ex_1.txt')
 grid_str,  = input_reader.get_item()
 
 grid_builder = Matrix(grid_str)
@@ -20,7 +19,7 @@ e_loc = grid_builder.get_loc('E')
 graph = grid_builder.to_graph()
 
 
-def dijkstra(graph, s_loc, with_path = False):
+def dijkstra(graph, s_loc, with_path=False):
     delta = {(0, 1): 'E', (0, -1): 'W', (-1, 0): 'N', (1, 0): 'S'}
     
     if with_path:
@@ -47,14 +46,14 @@ def dijkstra(graph, s_loc, with_path = False):
             if cost < distances[nb][0]:
                 heapq.heappush(q, (cost, nb))
                 if with_path:
-                    distances[nb] = (cost, nb_dir, path + [nb])
+                    distances[nb] = (cost, nb_dir, path[0] + [nb])
                 else:
                     distances[nb] = (cost, nb_dir)
 
     return distances
         
     
-dist = dijkstra(graph, s_loc)
+dist = dijkstra(graph, s_loc, with_path=True)
 print(dist[e_loc])
     
 # path = dist[e_loc][2]
