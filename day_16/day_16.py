@@ -1,13 +1,15 @@
 import sys
 from pathlib import Path
 sys.path.append(str(Path(__file__).resolve().parent.parent))
+sys.setrecursionlimit(50000)
 
 import heapq
+from collections import defaultdict
 
 from rsc.rsc import Reader, Matrix
 from rsc.rsc import prettyprint
 
-input_reader = Reader('day_16/day_16_ex_1.txt')
+input_reader = Reader('day_16/day_16_input.txt')
 grid_str,  = input_reader.get_item()
 
 grid_builder = Matrix(grid_str)
@@ -19,46 +21,103 @@ e_loc = grid_builder.get_loc('E')
 graph = grid_builder.to_graph()
 
 
-def dijkstra(graph, s_loc, with_path=False):
-    delta = {(0, 1): 'E', (0, -1): 'W', (-1, 0): 'N', (1, 0): 'S'}
+def get_adj(node_loc, node_dir):
+    delta = [(0, 1), (-1, 0), (0, -1), (1, 0)] # ENWS <-> 0123
+    # keep going straight
+    new_loc = (node_loc[0] + delta[node_dir][0], node_loc[1] + delta[node_dir][1])
+    if grid[new_loc[0]][new_loc[1]] != '#':
+        yield (1, (new_loc, node_dir))
+    # turn left
+    yield (1000, (node_loc, (node_dir + 1) % 4))
+    # turh right
+    yield (1000, (node_loc, (node_dir - 1) % 4))
     
-    if with_path:
-        distances = {node: (float('inf'), None, []) for node in graph} # score, dir, path
-        distances[s_loc] = (0, 'E', [s_loc])
-    else:
-        distances = {node: (float('inf'), None) for node in graph} # score, dir
-        distances[s_loc] = (0, 'E')
+    
+def dijkstra(s_loc):
+    distances = defaultdict(lambda: float('inf'))
+    from_records = defaultdict(set)
+    
+    distances[(s_loc, 0)] = 0
     
     q = []
-    heapq.heappush(q, (0, s_loc))
+    heapq.heappush(q, (0, (s_loc, 0))) # (cost, ((x, y), dir))
     
     while q:
-        dist, node = heapq.heappop(q)
-        node_dist, node_dir, *path = distances[node]
+        # print('\nqueue: {}'.format(q))
+        curr_cost, node = heapq.heappop(q)
+        # print('popping: ', curr_cost, node)
+        node_loc, node_dir = node
+        cost_so_far = distances[node]
         
-        if node_dist < dist: # already visited
+        # already visited
+        if cost_so_far < curr_cost:
             continue
+        
+        # cost: int, nb: ((x, y), dir)
+        for cost, nb in get_adj(node_loc, node_dir):
+            # print('checking adj: ', cost, nb)
+            total_cost = curr_cost + cost
+            if total_cost < distances[nb]:
+                # print('updating from {} to {}'.format(distances[nb], total_cost))
+                heapq.heappush(q, (total_cost, nb))
+                distances[nb] = total_cost
+                # print(distances)
+                from_records[nb] = {node}
+            elif total_cost == distances[nb]:
+                from_records[nb].add(node)
 
-        for nb in graph[node]:
-            nb_delta = (nb[0] - node[0], nb[1] - node[1])
-            nb_dir = delta[nb_delta]
-            cost = (node_dist + 1) if node_dir == nb_dir else (node_dist + 1001)
-            if cost < distances[nb][0]:
-                heapq.heappush(q, (cost, nb))
-                if with_path:
-                    distances[nb] = (cost, nb_dir, path[0] + [nb])
-                else:
-                    distances[nb] = (cost, nb_dir)
-
-    return distances
+    return distances, from_records
         
     
-dist = dijkstra(graph, s_loc, with_path=True)
-print(dist[e_loc])
+dist, records = dijkstra(s_loc)
+for i in range(4):
+    print('{}-th dir: {}'.format(i, dist[e_loc, i]))
     
-# path = dist[e_loc][2]
-# for loc in path:
-#     grid[loc[0]][loc[1]] = '>'
+
+# backtrack
+best_dir = 1
+shortest_path_nodes = set()
+stack = [((e_loc), best_dir)]
+while stack:
+    looking_at = stack.pop()
+    shortest_path_nodes.add(looking_at)
+    for item in records[looking_at]:
+        stack.append(item)
+
+print(len(set(item[0] for item in shortest_path_nodes)))
+
+
+# # recursive approach
+# score_info = {key: {# 'score': float('inf'), 
+#                     'E': float('inf'), 
+#                     'N': float('inf'), 
+#                     'W': float('inf'), 
+#                     'S': float('inf')} for key in graph}
+
+# delta = {'E': (0, 1), 'N': (-1, 0), 'W': (0, -1), 'S': (1, 0)}
+
+# def get_adjacent(node_dir, node_pos):
+#     node_x, node_y = node_pos
+#     for dir, (dx, dy) in delta.items():
+#         if grid[node_x + dx][node_y + dy] != '#':
+#             if delta[node_dir][0] + dx != 0 or delta[node_dir][1] + dy != 0:
+#                 yield (dir, (node_x + dx, node_y + dy))
     
-# prettyprint(grid)
+# def walk(node_dir, node_pos):
+#     if node_pos == e_loc:
+#         return
     
+#     for nbs in get_adjacent(node_dir, node_pos):
+#         nbs_dir, nbs_pos = nbs
+#         score_so_far = score_info[node_pos][node_dir]
+#         score = score_so_far + 1 if node_dir == nbs_dir else score_so_far + 1001
+#         if score < score_info[nbs_pos][nbs_dir]:
+#             score_info[nbs_pos][nbs_dir] = score
+#             walk(nbs_dir, nbs_pos)
+        
+# score_info[s_loc]['E'] = 0
+# score_info[s_loc]['N'] = 0
+# score_info[s_loc]['W'] = 0
+# score_info[s_loc]['S'] = 0
+# walk('E', s_loc)
+# print(score_info[e_loc])
