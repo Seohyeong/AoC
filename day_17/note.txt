@@ -1,0 +1,91 @@
+[S] A: 25986278, B: 0, C: 0
+Program: 2,4,1,4,7,5,4,1,1,4,5,5,0,3,3,0
+
+BST: B <- 25986278(A) % 8 
+BXL: B <- B ^ 4
+CDV: C <- A // 2 **2
+BXC: B <- B ^ C
+BXL: B <- B ^ 4 (always)
+OUT: 6496575(B) % 8
+ADV: A <- A // 2**3          # for the loop to end, A has to be 0 after A // 8, A has to be in [0, 7]
+JNZ: A: 3248284, PT: 14 -> 0 # 8로 16번 나눌 수 있어야 (16번째 나눌 떄 0)
+
+BST: B <- 3248284 % 8
+BXL: B <- B ^ 4
+CDV: C <- A // 2 **0
+BXC: B <- B ^ C
+BXL: B <- B ^ 4
+OUT: 3248280 % 8
+ADV: A <- A // 2**3
+JNZ: A: 406035, PT: 14 -> 0
+
+BST: B <- 406035 % 8
+BXL: B <- B ^ 4
+CDV: C <- A // 2 **7
+BXC: B <- B ^ C
+BXL: B <- B ^ 4
+OUT: 3175 % 8
+ADV: A <- A // 2**3
+JNZ: A: 50754, PT: 14 -> 0
+
+BST: B <- 50754 % 8
+BXL: B <- B ^ 4
+CDV: C <- A // 2 **6
+BXC: B <- B ^ C
+BXL: B <- B ^ 4
+OUT: 795 % 8
+ADV: A <- A // 2**3
+JNZ: A: 6344, PT: 14 -> 0
+
+BST: B <- 6344 % 8
+BXL: B <- B ^ 4
+CDV: C <- A // 2 **4
+BXC: B <- B ^ C
+BXL: B <- B ^ 4
+OUT: 396 % 8
+ADV: A <- A // 2**3
+JNZ: A: 793, PT: 14 -> 0
+
+BST: B <- 793 % 8
+BXL: B <- B ^ 4
+CDV: C <- A // 2 **5
+BXC: B <- B ^ C
+BXL: B <- B ^ 4
+OUT: 25 % 8
+ADV: A <- A // 2**3
+JNZ: A: 99, PT: 14 -> 0
+
+BST: B <- 99 % 8
+BXL: B <- B ^ 4
+CDV: C <- A // 2 **7
+BXC: B <- B ^ C
+BXL: B <- B ^ 4
+OUT: 3 % 8
+ADV: A <- A // 2**3
+JNZ: A: 12, PT: 14 -> 0
+
+BST: B <- 12 % 8
+BXL: B <- B ^ 4
+CDV: C <- A // 2 **0
+BXC: B <- B ^ C
+BXL: B <- B ^ 4
+OUT: 8 % 8
+ADV: A <- A // 2**3
+JNZ: A: 1, PT: 14 -> 0
+
+BST: B <- 1 % 8
+BXL: B <- B ^ 4
+CDV: C <- A // 2 **5
+BXC: B <- B ^ C
+BXL: B <- B ^ 4
+OUT: 1 % 8
+ADV: A <- A // 2**3
+JNZ: A: 0, PT: 14 -> 0
+
+[E] A: 0, B: 1, C: 0
+[7, 0, 7, 3, 4, 1, 3, 0, 1]
+
+
+
+1000000000000000000000000011011110011101000000:    35184373000000
+111000000000000000000000010100100001000010000000:  246290610000000
