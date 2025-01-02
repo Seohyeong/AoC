@@ -42,11 +42,11 @@ class State:
             return self.registers[2]
         
     def debug_print(self):
-        print("[R] PT: {:<5} A: {:<10} B: {:<10} C: {:<10} OUT: {}".format(state.inst_pt,
-                                                            state.registers[0], 
-                                                            state.registers[1], 
-                                                            state.registers[2], 
-                                                            state.outputs))
+        print("[R] PT: {:<5} A: {:<10} B: {:<10} C: {:<10} OUT: {}".format(self.state.inst_pt,
+                                                            self.state.registers[0], 
+                                                            self.state.registers[1], 
+                                                            self.state.registers[2], 
+                                                            self.state.outputs))
         
     def run_inst(self, inst, operand):
         if inst == Inst.ADV.value:
