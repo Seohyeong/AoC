@@ -134,19 +134,17 @@ def fix_bit(i, result_to_inst, inst_to_result):
         I = set(current_inst).intersection(set(gt_inst))
         output = list(U - I)
         
-        # if output only consists of logic gates, do len(output) != 2 case
-        if 'AND' in output: output.remove('AND') 
-        if 'XOR' in output: output.remove('XOR')
-        if 'OR' in output: output.remove('OR')
-            
-        if len(output) != 2:
-            # print('MORE THAN 2 MISMATCH')
+        # if all there is different are two logic gates, swap current_z with what gt_inst is
+        if all([x in ('AND', 'XOR', 'OR') for x in output]):
             output = [current_z, inst_to_result[tuple(sorted(gt_inst))]]
-            new_result_to_inst = fix_result_to_inst(result_to_inst, output[0], output[1])
-            new_inst_to_result = build_inst_to_result(new_result_to_inst)
-        else:
-            new_result_to_inst = fix_result_to_inst(result_to_inst, output[0], output[1])
-            new_inst_to_result = build_inst_to_result(new_result_to_inst)
+        # if more than two wires are different, swap current_z with what gt_inst is
+        elif len(output) != 2:
+            output = [current_z, inst_to_result[tuple(sorted(gt_inst))]]
+        
+        # default: if two wires are different, swap two
+        new_result_to_inst = fix_result_to_inst(result_to_inst, output[0], output[1])
+        new_inst_to_result = build_inst_to_result(new_result_to_inst)
+
         ANS.extend(output)
             
     return new_result_to_inst, new_inst_to_result
