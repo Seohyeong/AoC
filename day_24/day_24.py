@@ -51,25 +51,11 @@ with open('day_24/day_24_input.txt') as file:
         for line in insts 
         for read, write in [line.split(' -> ')]
     ]
-    
+
+# # PART 1
 # vals = run(init_vals, insts)
-
-# decimal_x = construct_wires(vals, type='x')
-# decimal_y = construct_wires(vals, type='y')
 # decimal_z = construct_wires(vals, type='z')
-
-# binary_x = decimal_to_binary(decimal_x)
-# binary_y = decimal_to_binary(decimal_y)
-# binary_z = decimal_to_binary(decimal_z)
-
-# gt_decimal_z = decimal_x + decimal_y
-# gt_binary_z = decimal_to_binary(gt_decimal_z)
-
-# print('GROUNDTRUTH Z')
-# print(gt_binary_z)
-
-# print('CURRENT Z')
-# print(binary_z)
+# print(decimal_z)
 
 
 # PART 2
@@ -117,8 +103,6 @@ def fix_result_to_inst(result_to_inst, o1, o2):
 
 ANS = []
 def fix_bit(i, result_to_inst, inst_to_result):
-    if i == 45:
-        print()
     new_result_to_inst = dict()
     new_inst_to_result = dict()
     
@@ -137,6 +121,7 @@ def fix_bit(i, result_to_inst, inst_to_result):
         # if all there is different are two logic gates, swap current_z with what gt_inst is
         if all([x in ('AND', 'XOR', 'OR') for x in output]):
             output = [current_z, inst_to_result[tuple(sorted(gt_inst))]]
+            
         # if more than two wires are different, swap current_z with what gt_inst is
         elif len(output) != 2:
             output = [current_z, inst_to_result[tuple(sorted(gt_inst))]]
