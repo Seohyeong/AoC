@@ -1,0 +1,41 @@
+# z00: ['y00', 'XOR', 'x00']
+
+# z01: ['wwc', 'XOR', 'nvv'] -> nvv OR (y00 AND x00) -> nvv OR nvv -> nvv
+# ['x01', 'XOR', 'y01'] XOR ['y00', 'AND', 'x00']
+# zn: (xn XOR yn) XOR [(xn-1 AND yn-1) OR (zn-1 >> AND)]
+
+# z02: ['dkg', 'XOR', 'ghb']
+# ['y02', 'XOR', 'x02'] XOR ['nqm', 'OR', 'whj']
+# ['y02', 'XOR', 'x02'] XOR [['y01', 'AND', 'x01'], 'OR', '['wwc', 'AND', 'nvv']']
+# ['y02', 'XOR', 'x02'] XOR [['y01', 'AND', 'x01'], 'OR', '['['x01', 'XOR', 'y01']', 'AND', '['y00', 'AND', 'x00']']']
+# zn: (xn XOR yn) XOR [(xn-1 AND yn-1) OR (zn-1 >> AND)]
+
+# z03: ['ggg', 'XOR', 'kbg']
+# ['nwp', 'OR', 'gws'] XOR ['y03', 'XOR', 'x03']
+# ['['ghb', 'AND', 'dkg']', 'OR', '['x02', 'AND', 'y02']'] XOR ['y03', 'XOR', 'x03']
+# zn: (xn XOR yn) XOR [(xn-1 AND yn-1) OR (zn-1 >> AND)]
+
+# z04: ['vbj', 'XOR', 'chb']
+# ['x04', 'XOR', 'y04'] XOR ['jcf', 'OR', 'wgg']
+# ['x04', 'XOR', 'y04'] XOR ['['ggg', 'AND', 'kbg']', 'OR', '['x03', 'AND', 'y03']']
+# zn: (xn XOR yn) XOR [(xn-1 AND yn-1) OR (zn-1 >> AND)]
+
+# z05 (backtracked)
+# has to be: (x05 XOR y05) XOR [(x04 AND y04) OR ['vbj', 'AND', 'chb']]
+# cph XOR (jsj OR kqr)
+# cph XOR qqd
+
+# z08: mjm XOR gvw -> needs to be qjb instead of gvw (gvw and qjb definition has to be changed)
+# has to be: (x08 XOR y08) XOR [(x07 AND y07) OR ['gdp', 'AND', 'stm']]
+# qjb XOR (dsf OR qgv)
+# qjb XOR mjm 
+
+# NOW: 
+# gvw: ['x08', 'XOR', 'y08']
+# qjb: ['x08', 'AND', 'y08']
+# z08: gvw XOR mjm 
+
+# z09
+# has to be: (x09 XOR y09) XOR [(x08 AND y08) OR ['gvw', 'AND', 'mjm']]
+# cbf XOR (gvw OR qqm): new gvw
+# cbf XOR vdr
